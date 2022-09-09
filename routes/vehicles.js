@@ -8,6 +8,11 @@ router.get("/:driver", (req, res, next) => {
   const driver = req.params.driver;
   models.vehicle
     .findAll({
+      include: {
+        models: models.driver,
+        association: "driver",
+        attributes: ["first_name", "last_name", "email"]
+      },
       where: { driver_id: driver },
     })
     .then((vehicles) => {
@@ -74,7 +79,7 @@ router.put("/", (req, res, next) => {
 router.delete("/", (req, res, next) => {
   const { id } = req.body;
   models.vehicle
-    .delete({
+    .destroy({
       where: { id },
     })
     .then((response) => {
