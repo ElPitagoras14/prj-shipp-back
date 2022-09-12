@@ -6,14 +6,19 @@ const models = initModels(sequelize);
 
 router.get("/:driver", (req, res, next) => {
   const driver = req.params.driver;
+  const page = parseInt(req.query.page);
+  const lenght = 2;
+  const offset = page * lenght;
   models.vehicle
     .findAll({
       include: {
         models: models.driver,
         association: "driver",
-        attributes: ["first_name", "last_name", "email"]
+        attributes: ["first_name", "last_name", "email"],
       },
       where: { driver_id: driver },
+      limit: lenght,
+      offset: offset,
     })
     .then((vehicles) => {
       res.status(200).send(vehicles);
